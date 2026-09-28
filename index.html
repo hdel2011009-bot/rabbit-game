@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة الأرانب - تحدي الأعداد الاستثنائية</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #a8e6cf 0%, #dbede3 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+    .game-container {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 600px;
+      padding: 25px;
+      text-align: center;
+      border: 4px solid #4caf50;
+    }
+    .header {
+      margin-bottom: 20px;
+    }
+    .school-title {
+      color: #2e7d32;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .game-title {
+      color: #1b5e20;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+    .stats-bar {
+      display: flex;
+      justify-content: space-around;
+      background-color: #f1f8e9;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #33691e;
+      font-size: 1.1rem;
+    }
+    .question-box {
+      background-color: #fffde7;
+      border: 2px dashed #fbc02d;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+      color: #f57f17;
+      font-weight: bold;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .option-btn {
+      background-color: #e8f5e9;
+      border: 2px solid #81c784;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2e7d32;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .option-btn:hover {
+      background-color: #c8e6c9;
+      transform: translateY(-2px);
+    }
+    .start-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+      transition: all 0.2s;
+    }
+    .start-btn:hover {
+      background-color: #43a047;
+      transform: scale(1.05);
+    }
+    .footer {
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: #757575;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <div class="header">
+      <div class="school-title">🏫 مدرسة الوجيز النموذجية</div>
+      <h1 class="game-title">🐰 تحدي الأعداد الاستثنائية 🥕</h1>
+      <p style="color: #555; font-size: 0.95rem;">الصف الرابع الأساسي - مادة الرياضيات</p>
+    </div>
+
+    <div id="start-screen">
+      <p style="font-size: 1.1rem; color: #444; margin-bottom: 25px;">ساعد الأرنب في جمع الجزرات من خلال إجابة الأسئلة الصحيحة!</p>
+      <button class="start-btn" onclick="startGame()">ابدأ اللعبة الآن 🚀</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+      <div class="stats-bar">
+        <div>⭐ النقاط: <span id="score">0</span></div>
+        <div>⏳ الوقت: <span id="timer">30</span></div>
+      </div>
+
+      <div class="question-box" id="question">
+        اضغط على زر البدء للانطلاق في التحدي!
+      </div>
+
+      <div class="options-grid" id="options">
+        <!-- الخيارات تظهر هنا -->
+      </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+      <h2 style="color: #2e7d32; margin-bottom: 10px;">أحسنت يا بطل! 🎉</h2>
+      <p style="font-size: 1.2rem; margin-bottom: 20px;">لقد جمعت <span id="final-score" style="font-weight:bold; color:#f57f17;">0</span> نقطة!</p>
+      <button class="start-btn" onclick="startGame()">إعادة التحدي 🔄</button>
+    </div>
+
+    <div class="footer">
+      إعداد المعلمة: هديل الصقور | جميع الحقوق محفوظة ©
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "القيمة المنزلية للرقم 5 في العدد 52,310 هي:", options: ["50", "500", "50,000", "5,000"], answer: 2 },
+      { q: "أي مما يلي يمثل الصورة التحليلية للعدد 4,302؟", options: ["4000 + 300 + 2", "400 + 30 + 2", "4000 + 30 + 2", "4000 + 300 + 20"], answer: 0 },
+      { q: "تقريب العدد 8,765 إلى أقرب ألف هو:", options: ["8,000", "9,000", "8,700", "8,800"], answer: 1 },
+      { q: "حاصل جمع 2,500 + 1,300 يساوي:", options: ["3,800", "3,500", "3,900", "4,000"], answer: 0 },
+      { q: "العدد الأكبر من بين الأعداد التالية هو:", options: ["45,120", "45,210", "45,099", "45,201"], answer: 1 }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+    let timer = 30;
+    let interval;
+
+    function startGame() {
+      score = 0;
+      currentQ = 0;
+      timer = 30;
+      document.getElementById('score').innerText = score;
+      document.getElementById('timer').innerText = timer;
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      
+      showQuestion();
+      clearInterval(interval);
+      interval = setInterval(() => {
+        timer--;
+        document.getElementById('timer').innerText = timer;
+        if(timer <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function showQuestion() {
+      if(currentQ >= questions.length) {
+        endGame();
+        return;
+      }
+      let qData = questions[currentQ];
+      document.getElementById('question').innerText = qData.q;
+      let optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      
+      qData.options.forEach((opt, idx) => {
+        let btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(idx) {
+      if(idx === questions[currentQ].answer) {
+        score += 10;
+        document.getElementById('score').innerText = score;
+      }
+      currentQ++;
+      showQuestion();
+    }
+
+    function endGame() {
+      clearInterval(interval);
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+      document.getElementById('final-score').innerText = score;
+    }
+  </script>
+</body>
+</html>
